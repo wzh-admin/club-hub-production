@@ -45,16 +45,23 @@
   backend.signUp=async(email,password,nickname)=>{
     await backend.ready;if(!backend.client)throw new Error('未配置后端');
     const {data,error}=await backend.client.auth.signUp({email,password,options:{data:{nickname}}});if(error)throw error;
-    backend.user=data.user||null;backend.status=backend.user?'authenticated':'anonymous';
+    // 开启邮箱验证时，Supabase 会返回 user 但暂不返回 session；此时不能以匿名身份直写 users。
+    backend.user=data.session?.user||null;backend.status=backend.user?'authenticated':'anonymous';
     if(backend.user){const {error:profileError}=await backend.client.from('users').upsert({id:backend.user.id,nickname:nickname||email.split('@')[0]},{onConflict:'id'});if(profileError)throw profileError;await backend.refreshProfile();}
-    return backend;
+    return {needsEmailConfirmation:Boolean(data.user&&!data.session),user:data.user||null};
+  };
+  backend.updateProfile=async nickname=>{
+    await backend.ready;if(!backend.client||!backend.user)throw new Error('请先登录');
+    const next=String(nickname||'').trim();if(next.length<1||next.length>40)throw new Error('昵称需要为 1 到 40 个字符。');
+    const {data,error}=await backend.client.from('users').update({nickname:next}).eq('id',backend.user.id).select('id,nickname,avatar,school_id,created_at').single();
+    if(error)throw error;backend.profile=data||{...(backend.profile||{}),nickname:next};return backend.profile;
   };
   backend.signOut=async()=>{await backend.ready;if(backend.client){const {error}=await backend.client.auth.signOut();if(error)throw error}backend.user=null;backend.profile=null;backend.memberships=[];backend.pendingMemberships=[];backend.pendingApplications=[];backend.participations=[];backend.status=backend.client?'anonymous':'unconfigured';backend.eventInterests=[];backend.companionIntents=[];backend.groupMemberships=[];backend.interestGroups=[];};
   backend.getPublicClubs=async()=>{await backend.ready;if(!backend.client)throw new Error('未配置后端');const {data,error}=await backend.client.from('clubs').select('id,name,description,logo,school_id,status,created_at').eq('status','active').order('created_at',{ascending:false});if(error)throw error;return data||[]};
   backend.getInterestGroups=async()=>{await backend.ready;if(!backend.client)throw new Error('未配置后端');const {data,error}=await backend.client.from('interest_groups').select('id,creator_id,name,description,tags,school_id,join_mode,status,created_at').eq('status','active').order('created_at',{ascending:false});if(error)throw error;return data||[]};
   backend.getLeaderEvents=async()=>{await backend.ready;if(!backend.client||!backend.user)throw new Error('请先登录');const {data,error}=await backend.client.rpc('list_leader_events');if(error)throw error;return data||[]};
   backend.getLeaderEventRoster=async eventId=>{await backend.ready;if(!backend.client||!backend.user)throw new Error('请先登录');const {data,error}=await backend.client.rpc('list_leader_event_roster',{target_event_id:eventId});if(error)throw error;return data||[]};
-  backend.getPublishedEvents=async()=>{await backend.ready;if(!backend.client)throw new Error('未配置后端');const [eventResult,statsResult]=await Promise.all([backend.client.from('events').select('id,club_id,creator_id,title,description,location,start_at,deadline,capacity,min_people,status,created_at,clubs(id,name,logo),event_details(expected_scale,needs_intro,meet_point,welcome_host,requirements,roles)').eq('status','published').order('start_at',{ascending:true}),backend.client.rpc('get_published_event_stats')]);if(eventResult.error)throw eventResult.error;if(statsResult.error)throw statsResult.error;const stats=new Map((statsResult.data||[]).map(row=>[row.event_id,row]));return (eventResult.data||[]).map(row=>({...row,...(stats.get(row.id)||{confirmed_count:0,waitlisted_count:0,current_user_status:null})}))};
+  backend.getPublishedEvents=async()=>{await backend.ready;if(!backend.client)throw new Error('未配置后端');const [eventResult,statsResult]=await Promise.all([backend.client.from('events').select('id,club_id,creator_id,title,description,location,start_at,deadline,capacity,min_people,status,created_at,event_kind,visibility,gathering_group_id,meeting_point,host_contact,organizer_note,clubs(id,name,logo),event_details(expected_scale,needs_intro,meet_point,welcome_host,requirements,roles)').eq('status','published').order('start_at',{ascending:true}),backend.client.rpc('get_published_event_stats')]);if(eventResult.error)throw eventResult.error;if(statsResult.error)throw statsResult.error;const stats=new Map((statsResult.data||[]).map(row=>[row.event_id,row]));return (eventResult.data||[]).map(row=>({...row,...(stats.get(row.id)||{confirmed_count:0,waitlisted_count:0,current_user_status:null})}))};
   backend.requestClubMembership=async clubId=>{await backend.ready;if(!backend.client||!backend.user)throw new Error('请先登录');const {data,error}=await backend.client.from('club_members').insert({club_id:clubId,user_id:backend.user.id,role:'member',status:'pending'}).select('id,club_id,user_id,role,status,joined_at').single();if(error){if(error.code==='23505')throw new Error('你已经提交过该社团的加入申请，当前状态仍在处理中。');throw error}return data};
   backend.reviewClubJoinRequest=async(membershipId,decision)=>{await backend.ready;if(!backend.client||!backend.user)throw new Error('请先登录');const {data,error}=await backend.client.rpc('review_club_join_request',{target_membership_id:membershipId,decision});if(error)throw error;return Array.isArray(data)?data[0]||null:data};
   backend.setEventInterest=async(eventId,isInterested)=>{await backend.ready;if(!backend.client||!backend.user)throw new Error('请先登录');const {data,error}=await backend.client.rpc('set_event_interest',{target_event_id:eventId,is_interested:Boolean(isInterested)});if(error)throw error;return data};
@@ -79,6 +86,7 @@
   if(configured){backend.ready.then(()=>{if(backend.client)backend.client.auth.onAuthStateChange(async(_event,session)=>{backend.user=session?.user||null;backend.status=backend.user?'authenticated':'anonymous';if(backend.user){try{await backend.refreshProfile()}catch(error){backend.error=normalizeError(error)}}else{backend.profile=null;backend.memberships=[];backend.pendingMemberships=[];backend.pendingApplications=[]}window.dispatchEvent(new CustomEvent('club-auth-change'));});window.dispatchEvent(new CustomEvent('club-backend-ready'));});}
   window.clubBackend=backend;
 })();
+
 
 
 
