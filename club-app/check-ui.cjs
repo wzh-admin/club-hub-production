@@ -78,7 +78,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     const registrationManagementSql = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'enable-leader-event-registration-management.sql'), 'utf8');
     const leaderClubSql = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'enable-leader-club-management.sql'), 'utf8');
     const transferSql = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'enable-leader-club-transfer.sql'), 'utf8');
-    check(appSource.includes('edit-leader-club') && appSource.includes('leader-club-edit-form') && appSource.includes('delete-leader-club'), 'leader club profile exposes rename and archive actions');
+    check(appSource.includes('id="profile-form"') && appSource.includes('backend.updateProfile(nickname)'), '登录后账号面板提供昵称修改并提交真实资料更新');
+    check(adapterSource.includes('backend.updateProfile=async nickname') && adapterSource.includes("from('users').update({nickname:next})"), '昵称修改通过 Supabase users 自有资料更新并复读 profile');
+    check(appSource.includes("${isSignup?'<label class=\"field\">昵称") && !appSource.includes('auth-nickname'), '登录表单不渲染昵称输入，注册表单保留昵称输入');    check(appSource.includes('edit-leader-club') && appSource.includes('leader-club-edit-form') && appSource.includes('delete-leader-club'), 'leader club profile exposes rename and archive actions');
     check(adapterSource.includes("rpc('rename_leader_club'") && adapterSource.includes("rpc('archive_leader_club'"), 'club rename and archive use dedicated Supabase RPCs');
     check(leaderClubSql.includes('is_club_staff(target_club_id)') && leaderClubSql.toLowerCase().includes('for update'), 'club profile RPCs lock the target and enforce staff permission');
     check(leaderClubSql.includes("set status = 'archived'") && leaderClubSql.includes("set status = 'left'") && leaderClubSql.includes('confirmation_name'), 'club removal archives with explicit name confirmation and releases active membership');
