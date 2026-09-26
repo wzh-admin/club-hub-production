@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blue Archive Theme Preview</title>
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    :root { font-family: var(--theme-display-font); color: var(--theme-ink); background: var(--theme-bg); }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; min-height: 100vh; background: linear-gradient(135deg,#f7feff 0%,#b9efff 42%,#dff7ff 100%); }
+    button { font: inherit; }
+    .preview-shell { min-height: 100vh; padding: 28px clamp(16px, 5vw, 80px) 52px; position: relative; overflow: hidden; }
+    .preview-shell::before { content: ''; position: fixed; inset: 0; pointer-events: none; background: url('assets/visual/derived/sky-glass.svg') center / cover; opacity: .28; mix-blend-mode: multiply; }
+    .topbar, .stage, .status-strip { position: relative; z-index: 1; max-width: 1280px; margin-inline: auto; }
+    .topbar { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+    .eyebrow { margin: 0 0 8px; color: #2467a3; font: 700 12px/1 var(--theme-accent-font); letter-spacing: .18em; }
+    h1 { margin: 0; font-size: clamp(34px, 5vw, 72px); letter-spacing: -.06em; line-height: .95; }
+    .top-meta { text-align: right; color: #557b93; font: 700 12px/1.6 var(--theme-accent-font); letter-spacing: .08em; }
+    .top-meta strong { color: #17324d; }
+    .nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .nav button { border: 1px solid rgba(23,50,77,.2); background: rgba(255,255,255,.64); color: #17324d; padding: 10px 15px; cursor: pointer; clip-path: var(--theme-panel-cut); transition: background 160ms ease, color 160ms ease, transform 160ms ease; }
+    .nav button:hover { transform: translateY(-2px); background: #fff; }
+    .nav button[aria-selected="true"] { background: #17324d; color: #fff; box-shadow: 0 0 0 2px #54dcfe inset; }
+    .nav button:focus-visible { outline: none; box-shadow: var(--theme-focus-ring); }
+    .stage { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(320px,.8fr); min-height: 540px; border: 1px solid rgba(23,50,77,.18); background: rgba(255,255,255,.5); box-shadow: 0 24px 70px rgba(31,90,122,.2); clip-path: var(--theme-panel-cut); overflow: hidden; }
+    .visual { min-height: 540px; position: relative; background: var(--theme-events-background); background-size: cover; background-position: center; transition: background-image 220ms ease; }
+    .visual::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 36%, rgba(9,37,59,.08)); }
+    .visual-label { position: absolute; left: 32px; bottom: 28px; z-index: 1; color: #fff; text-shadow: 0 2px 12px rgba(13,43,65,.5); }
+    .visual-label small { display: block; font: 700 12px/1.4 var(--theme-accent-font); letter-spacing: .2em; }
+    .visual-label strong { display: block; margin-top: 8px; font-size: clamp(30px,4vw,56px); letter-spacing: -.06em; }
+    .panel { padding: clamp(24px,4vw,52px); background: rgba(250,254,255,.86); display: flex; flex-direction: column; justify-content: space-between; }
+    .panel-code { color: #2467a3; font: 700 12px/1 var(--theme-accent-font); letter-spacing: .16em; }
+    .panel h2 { margin: 20px 0 12px; font-size: clamp(28px,4vw,48px); letter-spacing: -.06em; }
+    .panel p { margin: 0; color: #365a72; line-height: 1.8; }
+    .data-list { display: grid; gap: 10px; margin: 28px 0; }
+    .data-row { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid rgba(23,50,77,.14); font-size: 14px; }
+    .data-row span:first-child { color: #557b93; }
+    .data-row strong { color: #17324d; font-family: var(--theme-accent-font); font-size: 12px; letter-spacing: .04em; }
+    .action { align-self: start; border: 0; padding: 13px 20px; background: #2b9fe8; color: #fff; cursor: pointer; clip-path: var(--theme-command-cut); box-shadow: 0 8px 20px rgba(43,159,232,.25); }
+    .action:hover { background: #1779b8; }
+    .action:focus-visible { outline: none; box-shadow: var(--theme-focus-ring); }
+    .status-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-top: 18px; }
+    .status { padding: 13px 14px; background: rgba(255,255,255,.7); border: 1px solid rgba(23,50,77,.12); }
+    .status small { display:block; color:#557b93; font:700 10px/1.3 var(--theme-accent-font); letter-spacing:.1em; }
+    .status strong { display:block; margin-top:5px; font-size:14px; }
+    .status[data-tone="success"] strong { color: var(--theme-status-success); }
+    .status[data-tone="warning"] strong { color: var(--theme-status-warning); }
+    .status[data-tone="pending"] strong { color: var(--theme-status-pending); }
+    .status[data-tone="notice"] strong { color: var(--theme-status-notice); }
+    @media (max-width: 760px) { .preview-shell { padding: 20px 16px 36px; } .topbar { align-items: start; flex-direction: column; gap: 12px; } .top-meta { text-align:left; } .stage { display: block; min-height: 0; } .visual { min-height: 300px; } .panel { min-height: 390px; padding: 28px 22px; } .status-strip { grid-template-columns: repeat(2,1fr); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="preview-shell">
+    <header class="topbar">
+      <div><p class="eyebrow">THEME PROTOTYPE / BLUE ARCHIVE</p><h1>同好据点</h1></div>
+      <div class="top-meta"><strong>VISUAL DRAFT 0.1</strong><br>ORIGINAL DERIVED ASSETS ONLY<br>NOT REGISTERED AT RUNTIME</div>
+    </header>
+    <nav class="nav" aria-label="主题页面预览">
+      <button type="button" data-page="hub" aria-selected="true">01 据点</button>
+      <button type="button" data-page="events" aria-selected="false">02 活动</button>
+      <button type="button" data-page="community" aria-selected="false">03 同好</button>
+      <button type="button" data-page="me" aria-selected="false">04 我的</button>
+    </nav>
+    <section class="stage" aria-live="polite">
+      <div class="visual" data-visual><div class="visual-label"><small data-code>HUB / AFTER SCHOOL</small><strong data-visual-title>天空与玻璃</strong></div></div>
+      <article class="panel"><div><div class="panel-code" data-panel-code>01 / HIDEOUT</div><h2 data-panel-title>把日常整理成一张轻盈的作战桌</h2><p data-panel-copy>保留社团系统的业务信息，用天空、玻璃和细线技术标记降低界面压迫感。</p><div class="data-list"><div class="data-row"><span>页面语言</span><strong data-token>SKY / GLASS / GRID</strong></div><div class="data-row"><span>视觉密度</span><strong>LIGHT / AIRY</strong></div><div class="data-row"><span>状态协议</span><strong>UNCHANGED</strong></div></div></div><button class="action" type="button" data-action>查看主题契约</button></article>
+    </section>
+    <section class="status-strip" aria-label="状态色预览"><div class="status" data-tone="success"><small>SUCCESS</small><strong>已确认</strong></div><div class="status" data-tone="warning"><small>WARNING</small><strong>需要注意</strong></div><div class="status" data-tone="pending"><small>PENDING</small><strong>等待审核</strong></div><div class="status" data-tone="notice"><small>NOTICE</small><strong>新动态</strong></div></section>
+  </main>
+  <script>
+    const pages = { hub:{code:'HUB / AFTER SCHOOL', title:'天空与玻璃', panel:'把日常整理成一张轻盈的作战桌', copy:'保留社团系统的业务信息，用天空、玻璃和细线技术标记降低界面压迫感。', token:'SKY / GLASS / GRID', bg:'url("assets/visual/derived/sky-glass.svg")'}, events:{code:'EVENTS / MISSION BOARD', title:'六边形任务网格', panel:'让活动信息像一张清晰的行动简报', copy:'用六边形、坐标线和轻量编号组织活动，不把战术装饰放到业务操作之前。', token:'HEX / COORD / BRIEF', bg:'url("assets/visual/derived/hex-grid.svg")'}, community:{code:'COMMUNITY / RELATION MAP', title:'轨道与节点', panel:'让社团关系保持可读，也保留一点未来感', copy:'关系线只做结构提示，不改变加入、创建和动态查看的业务语义。', token:'ORBIT / NODE / BOND', bg:'url("assets/visual/derived/orbit-network.svg")'}, me:{code:'ME / STUDENT DOSSIER', title:'档案玻璃面板', panel:'把个人状态放回一张安静的档案桌', copy:'轻薄面板承载个人资料和状态信息，装饰退到背景，焦点环保持高可见。', token:'DOSSIER / GLASS / STATUS', bg:'url("assets/visual/derived/profile-glass.svg")'} };
+    const root = document.documentElement; const visual = document.querySelector('[data-visual]'); const buttons = [...document.querySelectorAll('[data-page]')];
+    const update = page => { const d=pages[page]; visual.style.backgroundImage=d.bg; document.querySelector('[data-code]').textContent=d.code; document.querySelector('[data-visual-title]').textContent=d.title; document.querySelector('[data-panel-code]').textContent=d.code.replace(' / ',' / '); document.querySelector('[data-panel-title]').textContent=d.panel; document.querySelector('[data-panel-copy]').textContent=d.copy; document.querySelector('[data-token]').textContent=d.token; buttons.forEach(b=>b.setAttribute('aria-selected',String(b.dataset.page===page))); root.dataset.previewPage=page; };
+    buttons.forEach(button=>button.addEventListener('click',()=>update(button.dataset.page))); document.querySelector('[data-action]').addEventListener('click',()=>alert('主题契约草案：未注册、未启用、业务逻辑不变。'));
+  </script>
+</body>
+</html>

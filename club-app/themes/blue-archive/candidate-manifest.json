@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "blue-archive",
+  "version": "0.1.0-candidate",
+  "status": "active-local",
+  "displayName": "天空玻璃主题候选",
+  "inspirationLabel": "Blue Archive official-material theme direction",
+  "registered": true,
+  "enabled": true,
+  "rights": {
+    "status": "unverified",
+    "runtimeAllowed": true,
+    "officialAssetsAllowed": true,
+    "note": "官方素材已进入本地正式候选运行时；公开发布、复制改编、再分发和商用范围仍未核验。"
+  },
+  "runtimeCandidates": [
+    "assets/visual/logo.png",
+    "assets/visual/kv_2.webp",
+    "assets/visual/shares.png",
+    "assets/visual/game-home.png",
+    "assets/visual/feedback/hina-reference.png",
+    "assets/visual/feedback/yuuka-reference.png",
+    "assets/visual/feedback/shiroko-reference.png",
+    "assets/visual/feedback/hifumi-reference.png",
+    "assets/transition/official-home-bg.mp4",
+    "assets/visual/derived/sky-glass.svg",
+    "assets/visual/derived/hex-grid.svg",
+    "assets/visual/derived/orbit-network.svg",
+    "assets/visual/derived/profile-glass.svg",
+    "assets/visual/derived/halo.svg"
+  ],
+  "referenceOnly": [],
+  "fallback": {
+    "defaultTheme": "p5",
+    "preserveRoute": true,
+    "preserveBusinessState": true,
+    "onInvalidTheme": "use-default",
+    "onAssetFailure": "use-default"
+  }
+}

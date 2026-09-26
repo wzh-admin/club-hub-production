@@ -1,0 +1,10 @@
+/* Blue Archive 主题草案 v0.1：原创派生资源，仅供未注册原型使用。 */
+:root[data-theme="blue-archive"] {
+  color-scheme: light; --theme-id: "blue-archive"; --theme-accent: #54dcfe; --theme-accent-strong: #2b9fe8; --theme-bg: #dff7ff; --theme-ink: #17324d; --theme-white: #fff; --theme-paper: rgba(255,255,255,.78); --theme-paper-warm: #f4fcff; --theme-muted: #557b93;
+  --theme-status-success: #087f68; --theme-status-warning: #b36b00; --theme-status-locked: #536879; --theme-status-pending: #5569b8; --theme-status-failed: #b33d57; --theme-status-new: #1779b8; --theme-status-notice: #2467a3;
+  --theme-display-font: "Microsoft YaHei UI", "Noto Sans SC", sans-serif; --theme-accent-font: "Cascadia Mono", "Microsoft YaHei UI", sans-serif; --theme-command-cut: polygon(3% 0,100% 0,96% 100%,0 100%); --theme-panel-cut: polygon(0 4%,98% 0,100% 96%,2% 100%); --theme-focus-ring: 0 0 0 4px #17324d, 0 0 0 7px #54dcfe;
+  --theme-events-background: #dff7ff url("assets/visual/derived/hex-grid.svg") center/cover no-repeat; --theme-events-shade: linear-gradient(90deg,rgba(239,252,255,.96),rgba(223,247,255,.6));
+  --theme-community-background: #376e9a url("assets/visual/derived/orbit-network.svg") center/cover no-repeat; --theme-community-shade: linear-gradient(90deg,rgba(20,53,82,.86),rgba(39,97,138,.35));
+  --theme-profile-background: #e7f8fc url("assets/visual/derived/profile-glass.svg") center/cover no-repeat; --theme-profile-shade: linear-gradient(90deg,rgba(244,252,255,.95),rgba(229,248,252,.55));
+}
+@media (prefers-reduced-motion: reduce) { :root[data-theme="blue-archive"] { --theme-transition-duration: 0ms; } }

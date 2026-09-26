@@ -1,0 +1,462 @@
+/* 主题契约：作品主题只覆盖视觉令牌，不改变业务逻辑与状态语义。 */
+:root,
+:root[data-theme="p5"] {
+  color-scheme: dark;
+  --theme-id: "p5";
+  --theme-accent: #d60024;
+  --theme-accent-readable: #ff5c77;
+  --theme-accent-strong: #a9001d;
+  --theme-bg: #070707;
+  --theme-ink: #111111;
+  --theme-white: #ffffff;
+  --theme-paper: #f7f4e9;
+  --theme-paper-warm: #f7f3e8;
+  --theme-muted: #777777;
+  --theme-status-success: #008a50;
+  --theme-status-warning: #ffb000;
+  --theme-status-locked: #555555;
+  --theme-status-pending: #6d5dfc;
+  --theme-status-failed: #d60024;
+  --theme-status-new: #d60024;
+  --theme-status-notice: #1474d4;
+  --theme-display-font: P5, Impact, sans-serif;
+  --theme-accent-font: Hatty, P5, Impact, sans-serif;
+  --theme-command-cut: polygon(8% 0, 100% 11%, 92% 89%, 0 100%);
+  --theme-panel-cut: polygon(0 9%, 96% 0, 100% 86%, 5% 100%);
+  --theme-focus-ring: 0 0 0 6px var(--theme-accent);
+  --theme-events-background: #130e10 url('assets/visual/mission-city.webp') center center / cover no-repeat;
+  --theme-events-shade: linear-gradient(90deg, #100a0dca 0%, #130d10a6 48%, #08080977 100%);
+  --theme-community-background: #480009 url('assets/visual/bonds-collage.webp') center center / cover no-repeat;
+  --theme-community-shade: linear-gradient(90deg, #290009a8 0%, #39000852 60%, #09050772 100%);
+  --theme-profile-background: #eeeae2 url('assets/visual/profile-dossier.webp') center center / cover no-repeat;
+  --theme-profile-shade: linear-gradient(90deg, #f4f0e8a8 0%, #f4f0e866 57%, #e4ddd438 100%);
+}
+
+
+:root[data-theme="blue-archive"] {
+  color-scheme: light; --theme-id: "blue-archive"; --theme-accent: #54dcfe; --theme-accent-readable: #1779b8; --theme-accent-strong: #2b9fe8; --theme-bg: #dff7ff; --theme-ink: #17324d; --theme-white: #fff; --theme-paper: rgba(255,255,255,.86); --theme-paper-warm: #f4fcff; --theme-muted: #557b93;
+  --theme-status-success: #087f68; --theme-status-warning: #8a5200; --theme-status-locked: #536879; --theme-status-pending: #5569b8; --theme-status-failed: #b33d57; --theme-status-new: #1779b8; --theme-status-notice: #2467a3;
+  --theme-display-font: "Microsoft YaHei UI", "Noto Sans SC", sans-serif; --theme-accent-font: "Cascadia Mono", "Microsoft YaHei UI", sans-serif; --theme-command-cut: polygon(3% 0,100% 0,96% 100%,0 100%); --theme-panel-cut: polygon(0 4%,98% 0,100% 96%,2% 100%); --theme-focus-ring: 0 0 0 4px #17324d, 0 0 0 7px #54dcfe;
+  --theme-events-background: #dff7ff url('themes/blue-archive/assets/visual/derived/hex-grid.svg') center / cover no-repeat; --theme-events-shade: linear-gradient(90deg,rgba(239,252,255,.96),rgba(223,247,255,.6)); --theme-community-background: #376e9a url('themes/blue-archive/assets/visual/derived/orbit-network.svg') center / cover no-repeat; --theme-community-shade: linear-gradient(90deg,rgba(20,53,82,.86),rgba(39,97,138,.35)); --theme-profile-background: #e7f8fc url('themes/blue-archive/assets/visual/derived/profile-glass.svg') center / cover no-repeat; --theme-profile-shade: linear-gradient(90deg,rgba(244,252,255,.95),rgba(229,248,252,.55)); --theme-transition-duration: 180ms;
+}
+:root[data-theme="blue-archive"] body { background: var(--theme-bg); color: var(--theme-ink); }
+:root[data-theme="blue-archive"] .hud { background: rgba(244,252,255,.9); border-bottom-color: rgba(23,50,77,.16); }
+:root[data-theme="blue-archive"] .command-nav { background: rgba(244,252,255,.72); border-left-color: rgba(23,50,77,.15); }
+:root[data-theme="blue-archive"] .command-nav a { color: var(--theme-ink); }
+:root[data-theme="blue-archive"] .command-nav a.active { background: var(--theme-ink); color: var(--theme-white); }
+:root[data-theme="blue-archive"] .advisor { background: rgba(255,255,255,.84); border-color: rgba(23,50,77,.16); }
+:root[data-theme="blue-archive"] .screen-shade { background: var(--theme-events-shade); }
+:root[data-theme="blue-archive"] .community-screen .screen-shade { background: var(--theme-community-shade); }
+:root[data-theme="blue-archive"] .me-screen .screen-shade { background: var(--theme-profile-shade); }
+:root[data-theme="blue-archive"] .p5-button, :root[data-theme="blue-archive"] button.p5-button { background: var(--theme-accent-strong); color: var(--theme-white); box-shadow: 4px 4px 0 var(--theme-ink); }
+:root[data-theme="blue-archive"] .p5-button:hover { background: var(--theme-accent-readable); }
+:root[data-theme="blue-archive"] .p5-loader { background: #dff7ff; color: var(--theme-ink); }
+:root[data-theme="blue-archive"] .p5-loader b { color: var(--theme-accent-readable); }
+:root[data-theme="blue-archive"] .theme-choice { border-color: rgba(23,50,77,.18); background: rgba(255,255,255,.74); color: var(--theme-ink); }
+:root[data-theme="blue-archive"] .theme-choice[aria-pressed="true"] { background: var(--theme-ink); color: var(--theme-white); }
+@media (prefers-reduced-motion: reduce) { :root[data-theme="blue-archive"] { --theme-transition-duration: 0ms; } }
+
+/* Blue Archive 可读性微调：保留原有布局与业务结构，只减轻视觉负担。 */
+:root[data-theme="blue-archive"] .club-sigil {
+  filter: drop-shadow(2px 2px 0 rgba(23, 50, 77, .18));
+}
+:root[data-theme="blue-archive"] .club-sigil b {
+  text-shadow: none;
+}
+:root[data-theme="blue-archive"] {
+  --theme-events-shade: linear-gradient(90deg, rgba(239, 252, 255, .76), rgba(223, 247, 255, .32));
+  --theme-community-shade: linear-gradient(90deg, rgba(20, 53, 82, .68), rgba(39, 97, 138, .18));
+  --theme-profile-shade: linear-gradient(90deg, rgba(244, 252, 255, .78), rgba(229, 248, 252, .32));
+}
+@media (max-width: 700px) {
+  :root[data-theme="blue-archive"] .hud {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+  :root[data-theme="blue-archive"] .club-sigil {
+    gap: 7px;
+  }
+  :root[data-theme="blue-archive"] .sigil-star {
+    width: 42px;
+    height: 38px;
+    font-size: 27px;
+  }
+  :root[data-theme="blue-archive"] .club-sigil b {
+    font-size: 16px;
+  }
+  :root[data-theme="blue-archive"] .club-sigil small {
+    font-size: 7px;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  :root[data-theme="blue-archive"] .org-chip {
+    display: none;
+  }
+}
+
+/* Blue Archive 官方素材运行时覆盖：主题资源已进入本地正式候选包。 */
+:root[data-theme="blue-archive"] {
+  --theme-events-background: #dff7ff url('themes/blue-archive/assets/visual/kv_2.webp') center / cover no-repeat;
+  --theme-community-background: #376e9a url('themes/blue-archive/assets/visual/shares.png') center / cover no-repeat;
+  --theme-profile-background: #d9f4ff url('themes/blue-archive/assets/visual/kv_2.webp') center 24% / cover no-repeat;
+}
+.theme-logo { display: none; }
+:root[data-theme="blue-archive"] .theme-logo {
+  display: block;
+  width: 128px;
+  height: 44px;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 2px 4px rgba(23, 50, 77, .18));
+}
+:root[data-theme="blue-archive"] .club-sigil {
+  gap: 10px;
+}
+:root[data-theme="blue-archive"] .advisor img {
+  object-fit: contain;
+  object-position: center bottom;
+  background: linear-gradient(135deg, rgba(84,220,254,.36), rgba(255,255,255,.86));
+}
+:root[data-theme="blue-archive"] .p5-empty-state img,
+:root[data-theme="blue-archive"] .ranking-empty img {
+  object-fit: contain;
+  object-position: center bottom;
+  background: linear-gradient(135deg, rgba(84,220,254,.26), rgba(255,255,255,.78));
+}
+:root[data-theme="blue-archive"] .feedback-character {
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 8px 12px rgba(23, 50, 77, .2));
+}
+@media (max-width: 700px) {
+  :root[data-theme="blue-archive"] .theme-logo {
+    width: 86px;
+    height: 34px;
+  }
+  :root[data-theme="blue-archive"] .club-sigil {
+    gap: 6px;
+  }
+}
+
+/* Blue Archive 主题深化：四页面的视觉角色与主题选择卡。 */
+:root[data-theme="blue-archive"] .hub-screen .hero-copy { max-width: 600px; padding: 22px 28px 24px; background: linear-gradient(110deg, rgba(255,255,255,.84), rgba(255,255,255,.32)); border-left: 6px solid var(--theme-accent); box-shadow: 10px 10px 0 rgba(23,50,77,.16); clip-path: polygon(0 0, 96% 5%, 100% 89%, 4% 100%); }
+:root[data-theme="blue-archive"] .hub-screen .hero-copy h1 { color: var(--theme-ink); text-shadow: 2px 2px 0 rgba(84,220,254,.55); }
+:root[data-theme="blue-archive"] .hub-screen .hero-sticker { background: rgba(23,50,77,.92); filter: drop-shadow(8px 8px 0 rgba(84,220,254,.8)); }
+:root[data-theme="blue-archive"] .hub-screen .quick-card { border: 1px solid rgba(23,50,77,.15); box-shadow: 6px 7px 0 rgba(23,50,77,.18); }
+:root[data-theme="blue-archive"] .hub-screen .quick-card:nth-child(2) { background: rgba(23,50,77,.92); }
+:root[data-theme="blue-archive"] .events-layout,
+:root[data-theme="blue-archive"] .community-wrap,
+:root[data-theme="blue-archive"] .profile-layout { position: relative; }
+:root[data-theme="blue-archive"] .events-layout:before,
+:root[data-theme="blue-archive"] .community-wrap:before,
+:root[data-theme="blue-archive"] .profile-layout:before { content: "SKY GLASS // LOCAL DEMO"; display: block; width: max-content; margin-bottom: 8px; padding: 5px 10px; background: var(--theme-ink); color: var(--theme-accent); font: 10px var(--theme-accent-font); letter-spacing: .12em; clip-path: polygon(3% 0,100% 12%,96% 100%,0 88%); }
+:root[data-theme="blue-archive"] .events-layout:before { content: "MISSION GRID // LOCAL DEMO"; }
+:root[data-theme="blue-archive"] .community-wrap:before { content: "ORBIT LINK // LOCAL DEMO"; }
+:root[data-theme="blue-archive"] .profile-layout:before { content: "STUDENT DOSSIER // LOCAL DEMO"; }
+:root[data-theme="blue-archive"] .mission-card { border: 1px solid rgba(23,50,77,.15); filter: drop-shadow(6px 7px 0 rgba(23,50,77,.16)); }
+:root[data-theme="blue-archive"] .mission-card .kind { background: var(--theme-ink); color: var(--theme-accent); }
+:root[data-theme="blue-archive"] .bond-card { border-color: rgba(255,255,255,.8); box-shadow: inset 0 0 0 1px rgba(84,220,254,.35); }
+:root[data-theme="blue-archive"] .bond-card:nth-child(2) { border-color: rgba(23,50,77,.18); }
+:root[data-theme="blue-archive"] .profile-card { background: linear-gradient(145deg, rgba(23,50,77,.96), rgba(39,97,138,.88)); filter: drop-shadow(10px 11px 0 rgba(84,220,254,.72)); }
+:root[data-theme="blue-archive"] .record-board { background: rgba(255,255,255,.72); border: 1px solid rgba(23,50,77,.16); padding: 18px; box-shadow: 8px 8px 0 rgba(23,50,77,.12); }
+:root[data-theme="blue-archive"] .theme-switcher { margin-top: 18px; padding: 14px; background: linear-gradient(135deg, rgba(223,247,255,.92), rgba(255,255,255,.72)); border: 1px solid rgba(23,50,77,.16); }
+:root[data-theme="blue-archive"] .theme-switcher-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; color: var(--theme-muted); }
+:root[data-theme="blue-archive"] .theme-switcher-head small { color: var(--theme-accent-readable); font: 11px var(--theme-accent-font); letter-spacing: .12em; }
+:root[data-theme="blue-archive"] .theme-switcher-head span { font-size: 11px; }
+:root[data-theme="blue-archive"] .theme-choice-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+:root[data-theme="blue-archive"] .theme-choice { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 10px; min-height: 72px; padding: 8px 10px; text-align: left; border: 1px solid rgba(23,50,77,.18); background: rgba(255,255,255,.8); color: var(--theme-ink); clip-path: polygon(2% 0,100% 8%,98% 92%,0 100%); }
+:root[data-theme="blue-archive"] .theme-choice-art { display: grid; place-items: center; height: 52px; background: rgba(84,220,254,.28); overflow: hidden; }
+:root[data-theme="blue-archive"] .theme-choice-art img { max-width: 46px; max-height: 42px; object-fit: contain; }
+:root[data-theme="blue-archive"] .theme-choice-copy { display: grid; gap: 2px; min-width: 0; }
+:root[data-theme="blue-archive"] .theme-choice-copy b { font: 10px var(--theme-accent-font); letter-spacing: .08em; color: var(--theme-accent-readable); }
+:root[data-theme="blue-archive"] .theme-choice-copy strong { font-size: 14px; }
+:root[data-theme="blue-archive"] .theme-choice-copy small { color: var(--theme-muted); font-size: 9px; }
+:root[data-theme="blue-archive"] .theme-choice > i { color: var(--theme-accent-readable); font-style: normal; font-size: 20px; }
+:root[data-theme="blue-archive"] .theme-choice[aria-pressed="true"] { background: var(--theme-ink); border-color: var(--theme-accent); box-shadow: 4px 4px 0 var(--theme-accent); }
+:root[data-theme="blue-archive"] .theme-choice[aria-pressed="true"] .theme-choice-copy strong,
+:root[data-theme="blue-archive"] .theme-choice[aria-pressed="true"] .theme-choice-copy small { color: var(--theme-white); }
+@media (max-width: 700px) {
+  :root[data-theme="blue-archive"] .hub-screen .hero-copy { max-width: calc(100vw - 34px); padding: 16px 18px 18px; }
+  :root[data-theme="blue-archive"] .hub-screen .hero-sticker { display: none; }
+  :root[data-theme="blue-archive"] .hub-screen .quick-deck { left: 5%; right: 5%; bottom: 92px; grid-template-columns: 1fr; gap: 8px; }
+  :root[data-theme="blue-archive"] .hub-screen .quick-card { min-height: 78px; padding: 12px 16px; }
+  :root[data-theme="blue-archive"] .events-layout:before, :root[data-theme="blue-archive"] .community-wrap:before, :root[data-theme="blue-archive"] .profile-layout:before { margin-bottom: 4px; font-size: 9px; }
+  :root[data-theme="blue-archive"] .theme-choice-list { grid-template-columns: 1fr; }
+  :root[data-theme="blue-archive"] .theme-choice { min-height: 66px; }
+  :root[data-theme="blue-archive"] .theme-switcher-head { display: grid; gap: 3px; }
+}
+@media (max-width: 700px) {
+  :root[data-theme="blue-archive"] .hub-screen .quick-deck { top: 350px; bottom: auto; }
+  :root[data-theme="blue-archive"] .hub-screen .hero-actions { position: relative; z-index: 8; }
+}
+@media (max-width: 700px) {
+  :root[data-theme="blue-archive"] .hub-screen .quick-deck { position: absolute; left: 5%; right: 5%; width: auto; top: 350px; bottom: auto; margin-top: 0; }
+}
+
+/* 主题选择器专用弹窗：避免继承全局内容区的展示高度与图片规则 */
+:root[data-theme="blue-archive"] dialog.theme-menu-dialog {
+  max-height: 86vh;
+}
+:root[data-theme="blue-archive"] dialog.theme-menu-dialog #dialog-body {
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+}
+:root[data-theme="blue-archive"] dialog.theme-menu-dialog .theme-choice-art {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  min-height: 52px;
+}
+:root[data-theme="blue-archive"] dialog.theme-menu-dialog .theme-choice-art img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 46px !important;
+  max-height: 42px !important;
+  object-fit: contain !important;
+}
+@media (max-width: 700px) {
+  :root[data-theme="blue-archive"] dialog.theme-menu-dialog {
+    width: min(560px, calc(100% - 20px));
+    max-height: 88vh;
+    padding: 24px 18px;
+  }
+  :root[data-theme="blue-archive"] dialog.theme-menu-dialog #dialog-body {
+    min-height: 0;
+  }
+  :root[data-theme="blue-archive"] dialog.theme-menu-dialog .theme-choice {
+    min-height: 64px;
+  }
+}
+
+/* 主题选择器基础布局：菜单可从任一已安装主题打开 */
+dialog.theme-menu-dialog .theme-switcher {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--theme-ink) 18%, transparent);
+}
+dialog.theme-menu-dialog .theme-switcher-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+dialog.theme-menu-dialog .theme-choice-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+dialog.theme-menu-dialog .theme-choice {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  align-items: center;
+  width: auto;
+  min-width: 0;
+  min-height: 76px;
+  padding: 8px 10px;
+  text-align: left;
+  border: 1px solid color-mix(in srgb, var(--theme-ink) 18%, transparent);
+  background: color-mix(in srgb, var(--theme-paper) 88%, transparent);
+  color: var(--theme-ink);
+  clip-path: polygon(2% 0,100% 8%,98% 92%,0 100%);
+}
+dialog.theme-menu-dialog .theme-choice-art {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  min-height: 52px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--theme-accent) 28%, transparent);
+}
+dialog.theme-menu-dialog .theme-choice-art img {
+  display: block;
+  width: auto !important;
+  height: auto !important;
+  max-width: 46px !important;
+  max-height: 42px !important;
+  object-fit: contain !important;
+}
+dialog.theme-menu-dialog .theme-choice-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+dialog.theme-menu-dialog .theme-choice-copy b {
+  font: 10px var(--theme-display-font);
+  letter-spacing: .08em;
+  color: var(--theme-accent-readable);
+}
+dialog.theme-menu-dialog .theme-choice-copy strong {
+  font-size: 14px;
+}
+dialog.theme-menu-dialog .theme-choice-copy small {
+  color: var(--theme-muted);
+  font-size: 9px;
+}
+dialog.theme-menu-dialog .theme-choice > i {
+  color: var(--theme-accent-readable);
+  font-style: normal;
+  font-size: 20px;
+}
+dialog.theme-menu-dialog .theme-choice[aria-pressed="true"] {
+  background: var(--theme-ink);
+  border-color: var(--theme-accent);
+  box-shadow: 4px 4px 0 var(--theme-accent);
+}
+dialog.theme-menu-dialog .theme-choice[aria-pressed="true"] .theme-choice-copy strong,
+dialog.theme-menu-dialog .theme-choice[aria-pressed="true"] .theme-choice-copy small {
+  color: var(--theme-white);
+}
+@media (max-width: 700px) {
+  dialog.theme-menu-dialog .theme-choice-list {
+    grid-template-columns: 1fr;
+  }
+  dialog.theme-menu-dialog .theme-choice {
+    min-height: 64px;
+  }
+  dialog.theme-menu-dialog .theme-switcher-head {
+    display: grid;
+    gap: 3px;
+  }
+}
+
+
+/* 第三主题扩展性验证：仅新增令牌和表现覆盖，不复制业务结构。 */
+:root[data-theme="neon-grid"] {
+  color-scheme: dark; --theme-id: "neon-grid"; --theme-accent: #7c5cff; --theme-accent-readable: #b7a6ff; --theme-accent-strong: #3d2b9c; --theme-bg: #090b18; --theme-ink: #101426; --theme-white: #f7f8ff; --theme-paper: rgba(247,248,255,.94); --theme-paper-warm: #ecebff; --theme-muted: #8e96b8;
+  --theme-status-success: #35d39a; --theme-status-warning: #ffc857; --theme-status-locked: #66708f; --theme-status-pending: #8b7cff; --theme-status-failed: #ff5d73; --theme-status-new: #b7a6ff; --theme-status-notice: #67d9ff;
+  --theme-display-font: "Cascadia Mono", "Microsoft YaHei UI", sans-serif; --theme-accent-font: "Cascadia Mono", "Microsoft YaHei UI", sans-serif; --theme-command-cut: polygon(0 0,100% 0,96% 100%,4% 100%); --theme-panel-cut: polygon(0 3%,97% 0,100% 97%,3% 100%); --theme-focus-ring: 0 0 0 4px #101426, 0 0 0 7px #b7a6ff;
+  --theme-events-background: #10152c linear-gradient(135deg,rgba(124,92,255,.24) 1px,transparent 1px) 0 0/28px 28px; --theme-events-shade: linear-gradient(90deg,rgba(9,11,24,.96),rgba(16,21,44,.68)); --theme-community-background: #11152b radial-gradient(circle at 20% 20%,rgba(103,217,255,.24),transparent 34%),linear-gradient(135deg,#11152b,#251d55); --theme-community-shade: linear-gradient(90deg,rgba(9,11,24,.92),rgba(37,29,85,.48)); --theme-profile-background: #e8eaff linear-gradient(135deg,rgba(124,92,255,.18) 1px,transparent 1px) 0 0/22px 22px; --theme-profile-shade: linear-gradient(90deg,rgba(232,234,255,.94),rgba(232,234,255,.64));
+}
+:root[data-theme="neon-grid"] body{background:var(--theme-bg);color:var(--theme-white)}
+:root[data-theme="neon-grid"] .hud{background:rgba(9,11,24,.9);border-bottom-color:rgba(183,166,255,.28)}
+:root[data-theme="neon-grid"] .command-nav{background:rgba(16,20,38,.82);border-left-color:rgba(183,166,255,.3);box-shadow:0 0 28px rgba(124,92,255,.2)}
+:root[data-theme="neon-grid"] .command-nav a{color:var(--theme-white);border-radius:8px;clip-path:none}
+:root[data-theme="neon-grid"] .command-nav a.active{background:var(--theme-accent-strong);box-shadow:inset 0 -3px 0 var(--theme-accent)}
+:root[data-theme="neon-grid"] .p5-button{background:var(--theme-accent-strong);color:var(--theme-white);border:1px solid var(--theme-accent);box-shadow:0 0 0 1px rgba(183,166,255,.25),5px 5px 0 #05060d}
+:root[data-theme="neon-grid"] .p5-button:hover{background:var(--theme-accent);box-shadow:0 0 18px rgba(183,166,255,.45),5px 5px 0 #05060d}
+:root[data-theme="neon-grid"] .screen-shade{background:var(--theme-events-shade)}
+:root[data-theme="neon-grid"] .community-screen .screen-shade{background:var(--theme-community-shade)}
+:root[data-theme="neon-grid"] .me-screen .screen-shade{background:var(--theme-profile-shade)}
+@media (prefers-reduced-motion: reduce){:root[data-theme="neon-grid"]{--theme-transition-duration:0ms}}
+
+/* ===== BA 档案卡第二轮可读性与排版修正 ===== */
+:root[data-theme="blue-archive"] [data-page="me"] .record-board {
+  align-items: stretch;
+  align-content: stretch;
+}
+
+:root[data-theme="blue-archive"] [data-page="me"] .record-board > .paper-panel {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+:root[data-theme="blue-archive"] [data-page="me"] .paper-panel h2 {
+  max-width: 100%;
+  min-width: 0;
+  margin: 0 0 12px;
+  padding: 0 0 8px;
+  font-size: clamp(14px, 1.35vw, 17px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  white-space: normal;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+:root[data-theme="blue-archive"] [data-page="me"] .leader-entry:before {
+  content: none;
+}
+
+:root[data-theme="blue-archive"] [data-page="me"] .leader-entry .p5-button {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: clamp(10px, 1.05vw, 12px);
+  padding-inline: 12px;
+}
+
+:root[data-theme="blue-archive"] [data-page="me"] .theme-current {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px 12px;
+  margin: 12px 0;
+  padding: 10px 12px;
+}
+
+:root[data-theme="blue-archive"] [data-page="me"] .theme-current span {
+  grid-row: 1 / 3;
+  align-self: start;
+  white-space: nowrap;
+}
+
+:root[data-theme="blue-archive"] [data-page="me"] .theme-current b,
+:root[data-theme="blue-archive"] [data-page="me"] .theme-current em {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+:root[data-theme="blue-archive"] .advisor {
+  left: auto;
+  right: 24px;
+  bottom: 24px;
+  width: min(610px, calc(100vw - 48px));
+  z-index: 120;
+}
+
+@media (max-width: 700px) {
+  :root[data-theme="blue-archive"] [data-page="me"] .paper-panel {
+    padding: 16px;
+  }
+
+  :root[data-theme="blue-archive"] [data-page="me"] .paper-panel h2 {
+    font-size: 14px;
+    letter-spacing: -0.025em;
+  }
+
+  :root[data-theme="blue-archive"] .advisor {
+    right: 12px;
+    bottom: 80px;
+    width: calc(100vw - 24px);
+  }
+}
+
+/* BA 档案页布局补强：主题说明条不再占用卡片网格首格 */
+:root[data-theme="blue-archive"] [data-page="me"] .profile-layout::before {
+  grid-column: 1 / -1;
+}
+
+:root[data-theme="blue-archive"] [data-page="me"] .paper-panel:not(.leader-entry):not(.theme-contract) {
+  color: #17324d;
+}
+
+:root[data-theme="blue-archive"] [data-page="me"] .paper-panel .record {
+  color: #24445f;
+  border-bottom-color: rgba(23, 50, 77, .35);
+}
+
+:root[data-theme="blue-archive"] [data-page="me"] .paper-panel .record b {
+  color: #17324d;
+}
+
+/* BA 主题不显示右下角顾问对话框，避免覆盖 MENU 与页面内容。 */
+:root[data-theme="blue-archive"] .advisor {
+  display: none !important;
+}
+
+/* BA 我的页为长档案阅读流，隐藏辅助顾问层以避免覆盖连接记录正文；其他页面仍固定在右下安全区。 */
+:root[data-theme="blue-archive"] body:has(.me-screen) .advisor {
+  display: none;
+}
+
+

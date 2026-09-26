@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blue Archive Official Reference Preview</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Microsoft YaHei UI", "Noto Sans SC", sans-serif; background: #081a31; color: #f5fbff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; background: #081a31; }
+    button { font: inherit; }
+    .shell { min-height: 100vh; padding: 24px clamp(16px, 4vw, 64px) 48px; position: relative; overflow: hidden; }
+    .shell::before { content: ""; position: fixed; inset: 0; pointer-events: none; background: linear-gradient(115deg, rgba(84,220,254,.2), transparent 36%, rgba(13,44,80,.8)), url('assets/visual/game-bg-cover.png') center / cover; opacity: .72; }
+    .content { position: relative; z-index: 1; max-width: 1440px; margin: auto; }
+    .notice { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 14px; border: 1px solid rgba(150,231,255,.7); background: rgba(4,24,48,.78); color: #bdefff; font: 700 11px/1.4 "Cascadia Mono", monospace; letter-spacing: .08em; }
+    .notice b { color: #54dcfe; }
+    header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin: 34px 0 22px; }
+    .brand { display: flex; align-items: center; gap: 18px; }
+    .brand img { width: min(220px, 34vw); max-height: 82px; object-fit: contain; object-position: left center; filter: drop-shadow(0 6px 18px rgba(0,0,0,.32)); }
+    .eyebrow { margin: 0 0 8px; color: #54dcfe; font: 700 12px/1.2 "Cascadia Mono", monospace; letter-spacing: .2em; }
+    h1 { margin: 0; font-size: clamp(30px, 5vw, 68px); line-height: .96; letter-spacing: -.07em; }
+    .meta { color: #b4cee3; text-align: right; font: 700 11px/1.7 "Cascadia Mono", monospace; letter-spacing: .08em; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .tabs button { cursor: pointer; color: #d8f6ff; border: 1px solid rgba(162,227,255,.42); background: rgba(9,39,70,.82); padding: 10px 15px; clip-path: polygon(5% 0,100% 0,95% 100%,0 100%); }
+    .tabs button[aria-selected="true"] { color: #06213d; background: #54dcfe; border-color: #54dcfe; box-shadow: 0 0 0 2px #06213d inset; }
+    .stage { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr); min-height: 560px; overflow: hidden; border: 1px solid rgba(162,227,255,.45); background: rgba(5,29,56,.82); box-shadow: 0 28px 80px rgba(0,0,0,.32); }
+    .hero { position: relative; min-height: 560px; background: center / cover no-repeat; transition: background-image 220ms ease; }
+    .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 42%, rgba(4,20,42,.1)), linear-gradient(0deg, rgba(3,16,34,.62), transparent 42%); }
+    .hero-caption { position: absolute; z-index: 1; left: 28px; bottom: 24px; max-width: 70%; text-shadow: 0 2px 14px rgba(0,0,0,.65); }
+    .hero-caption small { display: block; color: #54dcfe; font: 700 11px/1.3 "Cascadia Mono", monospace; letter-spacing: .16em; }
+    .hero-caption strong { display: block; margin-top: 8px; font-size: clamp(24px, 4vw, 52px); letter-spacing: -.06em; }
+    .panel { padding: clamp(24px, 4vw, 46px); background: rgba(7,31,58,.93); }
+    .panel-code { color: #54dcfe; font: 700 11px/1.4 "Cascadia Mono", monospace; letter-spacing: .16em; }
+    h2 { margin: 18px 0 12px; font-size: clamp(26px, 3vw, 42px); line-height: 1.05; letter-spacing: -.06em; }
+    .panel p { color: #bdd6e9; line-height: 1.8; margin: 0; }
+    .source-list { display: grid; gap: 10px; margin: 26px 0; }
+    .source { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(162,227,255,.2); color: #aac9df; font-size: 13px; }
+    .source b { color: #f5fbff; font: 700 11px/1.3 "Cascadia Mono", monospace; text-align: right; }
+    .action { cursor: pointer; border: 0; padding: 12px 18px; color: #06213d; background: #54dcfe; clip-path: polygon(4% 0,100% 0,95% 100%,0 100%); }
+    .gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+    .thumb { min-width: 0; border: 1px solid rgba(162,227,255,.32); background: rgba(6,28,54,.75); padding: 0; cursor: pointer; color: #fff; text-align: left; }
+    .thumb img { display: block; width: 100%; height: 150px; object-fit: cover; }
+    .thumb span { display: block; padding: 9px 10px; color: #c3e2f3; font: 700 10px/1.25 "Cascadia Mono", monospace; }
+    .thumb[aria-pressed="true"] { border-color: #54dcfe; box-shadow: 0 0 0 2px #54dcfe inset; }
+    @media (max-width: 760px) {
+      .shell { padding: 16px 12px 28px; }
+      .notice { align-items: flex-start; flex-direction: column; gap: 3px; }
+      header { align-items: flex-start; flex-direction: column; margin: 24px 0 18px; gap: 16px; }
+      .meta { text-align: left; }
+      .stage { display: block; min-height: 0; }
+      .hero { min-height: 330px; }
+      .panel { min-height: 380px; padding: 26px 20px; }
+      .gallery { grid-template-columns: repeat(2, 1fr); }
+      .thumb img { height: 110px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="content">
+      <div class="notice"><span><b>REFERENCE ONLY</b> / OFFICIAL MATERIAL LOCAL PREVIEW</span><span>NOT CONNECTED TO FORMAL RUNTIME</span></div>
+      <header>
+        <div class="brand"><img src="assets/visual/logo.png" alt="Blue Archive 官方 Logo"><div><p class="eyebrow">OFFICIAL ASSET STUDY / BLUE ARCHIVE</p><h1>官方素材参考页</h1></div></div>
+        <div class="meta">LOCAL FILES<br>VISUAL COMPARISON 0.1<br>FORMAL THEME UNCHANGED</div>
+      </header>
+      <nav class="tabs" aria-label="官方素材预览分类">
+        <button type="button" data-page="home" aria-selected="true">01 主视觉</button>
+        <button type="button" data-page="school" aria-selected="false">02 阵营视觉</button>
+        <button type="button" data-page="characters" aria-selected="false">03 角色素材</button>
+        <button type="button" data-page="shares" aria-selected="false">04 视觉拼贴</button>
+      </nav>
+      <section class="stage" aria-live="polite">
+        <div class="hero" data-hero style="background-image:url('assets/visual/kv.webp')"><div class="hero-caption"><small data-code>KEY VISUAL / HOME</small><strong data-title>主视觉与天空蓝层次</strong></div></div>
+        <article class="panel"><div><div class="panel-code" data-panel-code>01 / OFFICIAL KV</div><h2 data-panel-title>官方主视觉适合作为主题氛围层</h2><p data-copy>用于观察主视觉的色彩、留白、角色比例和信息叠加方式，不直接改变正式主题运行时。</p><div class="source-list"><div class="source"><span>素材来源</span><b data-source>kv.webp / kv_2.webp</b></div><div class="source"><span>使用层级</span><b>LOCAL REFERENCE</b></div><div class="source"><span>正式主题</span><b>UNCHANGED</b></div></div></div><button class="action" type="button" data-action>查看素材说明</button></article>
+      </section>
+      <section class="gallery" aria-label="官方素材缩略图">
+        <button class="thumb" type="button" data-thumb="home" aria-pressed="true"><img src="assets/visual/kv.webp" alt="官方主视觉 KV"><span>KV / HOME</span></button>
+        <button class="thumb" type="button" data-thumb="school" aria-pressed="false"><img src="assets/visual/img_abydos.png" alt="阿拜多斯阵营视觉"><span>FACTION / ABYDOS</span></button>
+        <button class="thumb" type="button" data-thumb="characters" aria-pressed="false"><img src="assets/feedback/hina-reference.png" alt="日奈角色参考图"><span>CHARACTER / HINA</span></button>
+        <button class="thumb" type="button" data-thumb="shares" aria-pressed="false"><img src="assets/visual/shares.png" alt="官方视觉拼贴"><span>SHARES / COLLAGE</span></button>
+      </section>
+    </div>
+  </main>
+  <script>
+    const pages={
+      home:{code:'KEY VISUAL / HOME',panelCode:'01 / OFFICIAL KV',title:'主视觉与天空蓝层次',copy:'用于观察主视觉的色彩、留白、角色比例和信息叠加方式，不直接改变正式主题运行时。',source:'kv.webp / kv_2.webp',bg:'url("assets/visual/kv.webp")'},
+      school:{code:'FACTION / SCHOOL VISUAL',panelCode:'02 / SCHOOL ART',title:'阵营图适合作为页面身份线索',copy:'阵营图可以帮助确定不同页面的色彩重心、纹理密度与卡片装饰方向，当前只做本地参考。',source:'img_abydos.png / img_trinity.png',bg:'url("assets/visual/img_catch-3.png")'},
+      characters:{code:'CHARACTER / FEEDBACK STUDY',panelCode:'03 / CHARACTER ART',title:'角色图可用于反馈层构图研究',copy:'角色素材可用于研究确认、完成和空状态反馈的构图比例；当前不接入正式 P5 业务反馈组件。',source:'hina-reference.png / yuuka-reference.png',bg:'url("assets/feedback/hina-reference.png")'},
+      shares:{code:'SHARES / VISUAL COLLAGE',panelCode:'04 / OFFICIAL COLLAGE',title:'拼贴素材展示官方图形语言',copy:'拼贴图用于观察图标、文字、色块和角色组合的节奏，正式主题仍只引用原创派生 SVG。',source:'shares.png / game-home.png',bg:'url("assets/visual/shares.png")'}
+    };
+    const root=document.documentElement, hero=document.querySelector('[data-hero]'), buttons=[...document.querySelectorAll('[data-page]')], thumbs=[...document.querySelectorAll('[data-thumb]')];
+    function update(page){const d=pages[page]; hero.style.backgroundImage=d.bg; document.querySelector('[data-code]').textContent=d.code; document.querySelector('[data-title]').textContent=d.title; document.querySelector('[data-panel-code]').textContent=d.panelCode; document.querySelector('[data-panel-title]').textContent=d.title; document.querySelector('[data-copy]').textContent=d.copy; document.querySelector('[data-source]').textContent=d.source; buttons.forEach(b=>b.setAttribute('aria-selected',String(b.dataset.page===page))); thumbs.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.thumb===page))); root.dataset.previewPage=page;}
+    buttons.forEach(b=>b.addEventListener('click',()=>update(b.dataset.page))); thumbs.forEach(b=>b.addEventListener('click',()=>update(b.dataset.thumb))); document.querySelector('[data-action]').addEventListener('click',()=>alert('本页仅用于本地官方素材参考，不代表已接入正式运行时或已完成授权核验。'));
+  </script>
+</body>
+</html>
