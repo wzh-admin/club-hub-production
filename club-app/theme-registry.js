@@ -162,7 +162,7 @@ window.CLUB_THEME_COPY = Object.freeze({
       me: Object.freeze(['这里记录的是你的参与轨迹，不是对学生活跃度的排名。','减少动效后，任务说明和系统通知仍会完整保留。','这是本地演示档案，刷新后所有状态会回到初始值。'])
     }),
     hub: Object.freeze({ eyebrow:'AFTER SCHOOL // EASY START', title:'放学后，', titleEm:'一起去！', lead:'先看看人数、流程和社交强度。可以先表达兴趣，等找到同行的人再决定。', task:'看看今天的活动 ↗', gather:'发起一个小聚', stickerTop:'STUDENT NETWORK', stickerMain:'GO<br>AT<br>YOUR<br>PACE.', stickerBottom:'从一次轻松回应开始，和同学一起出发。', deckLabel:'TODAY / LIVE SIGNALS', mission:'NEXT ACTIVITY', notice:'IMPORTANT NOTICE', noticeTitle:'社团活动守则', noticeConfirmed:'守则已确认', bonds:'YOUR BONDS', bondsText:'找到同学，建立连接' }),
-    events: Object.freeze({ eyebrow:'MISSION GRID', title:'发现', titleEm:'活动', lead:'请先确认时间、资格与主办信息，再提交你的参加意向。', search:'搜索活动…', empty:'暂未找到任务', emptyHint:'调整筛选条件，或发起一场成员小聚。', emptyCode:'NO ASSIGNMENT' }),
+    events: Object.freeze({ eyebrow:'MISSION GRID', title:'发现', titleEm:'活动', lead:'先看看任务信息，再选择适合自己的参与方式。', search:'搜索活动…', empty:'暂未找到任务', emptyHint:'调整筛选条件，或发起一场成员小聚。', emptyCode:'NO ASSIGNMENT' }),
     community: Object.freeze({ joined:'已加入小组', join:'查看并加入', followed:'已登记', game:'进入校园专区', eyebrow:'ORBIT LINK', title:'同好', titleEm:'同行', lead:'稳定兴趣小组和临时活动小队，都可以帮助同学先找到同行的人。', create:'＋ 发起兴趣小组', files:'小组资料', places:'校园生活手册' }),
     me: Object.freeze({ profile:'查看学生档案说明', eyebrow:'STUDENT DOSSIER', title:'我的参与', member:'STUDENT NETWORK MEMBER', tickets:'MY ACTIVITIES / 我的活动', leader:'CLUB STAFF PREVIEW / DEMO', options:'SETTINGS / 偏好', bonds:'CONNECTION LOG / 联络记录' })
   }),

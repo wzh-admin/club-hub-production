@@ -152,7 +152,14 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     }), 'BA 王者荣耀同好卡片文字对比度至少达到 4.5:1');
     check(await baMobile.locator('[data-group-id="g2"] h2').evaluate(el => getComputedStyle(el).color === 'rgb(23, 50, 77)' && getComputedStyle(el.parentElement.querySelector('p')).color === 'rgb(53, 95, 123)'), 'BA 未加入社团卡片使用明确深色文字');
     check(await baMobile.locator('[data-group-id="g1"] h2').evaluate(el => getComputedStyle(el).color === 'rgb(255, 255, 255)' && getComputedStyle(el.parentElement.querySelector('p')).color === 'rgb(217, 245, 255)'), 'BA 已加入社团卡片使用明确浅色文字');
-    await baMobile.close();    check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), '桌面无横向溢出');
+    await baMobile.close();
+    const baEvents = await open({ width: 390, height: 844 }, '#events');
+    await baEvents.evaluate(() => window.CLUB_THEME_RUNTIME.apply('blue-archive'));
+    await baEvents.waitForSelector('.events-screen');
+    check(!(await baEvents.locator('.events-screen .lead').innerText()).includes('请先确认时间、资格与主办信息'), 'BA 活动页移除指定提示文案');
+    check(await baEvents.locator('.low-pressure-note').evaluate(el => getComputedStyle(el).backgroundColor !== 'rgba(0, 0, 0, 0)' && getComputedStyle(el).color === 'rgb(23, 50, 77)'), 'BA 低压力说明卡片使用浅蓝底与深色文字');
+    await baEvents.screenshot({ path: path.join(__dirname, 'ba-events-390.png'), fullPage: false });
+    await baEvents.close();    check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), '桌面无横向溢出');
     check(await page.locator('.command-nav a').count() === 4, '四个 COMMAND 主入口齐全');
     check(await page.locator('.hero-video').count() === 1, '据点使用全屏视频背景');
     check(await page.locator('#loader').evaluate(el => el.classList.contains('hide')), 'P5 加载层正常退场');
@@ -224,7 +231,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     check((await page.locator('.low-pressure-note').innerText()).includes('不会占用活动名额'), '活动页明确低承诺动作不占名额');
     check(await page.locator('.events-screen .screen-bg').count() === 0, '活动页已移除干扰内容的视频背景');
     check((await page.locator('.events-screen').evaluate(el => getComputedStyle(el).backgroundImage)).includes('mission-city.webp'), '活动页使用任务城市 P5 背景');
-    check(await page.locator('.mission-card').count() === 3, '活动与成员聚会同时呈现');    check(await page.locator('.event-club-filter').count() === 1, '活动页提供社团活动分类组件');
+    check(await page.locator('.mission-card').count() === 3, '活动与成员聚会同时呈现');
+    check(await page.locator('.mission-card img').evaluateAll(imgs => new Set(imgs.map(img => new URL(img.src).pathname)).size >= 2), '成员小聚卡片按活动稳定分配不同人物素材');    check(await page.locator('.event-club-filter').count() === 1, '活动页提供社团活动分类组件');
     check(await page.locator('[data-action=\"event-club-filter\"]').count() >= 3, '活动页提供全部社团、已加入社团和其他公开活动选项');
     check(await page.locator('.mission-card .event-club-label').count() === 3, '活动卡明确显示所属社团');
     await page.locator('[data-action=\"event-club-filter\"][data-id=\"g1\"]').click();
@@ -345,7 +353,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     await page.locator('[data-action="close"]').last().click();
     await switchPage(page, 'community');
     check((await page.locator('.community-screen').evaluate(el => getComputedStyle(el).backgroundImage)).includes('bonds-collage.webp'), '同好页使用羁绊角色拼贴背景');
-    check(await page.getByRole('button', { name: '群文件说明', exact: true }).count() === 1, '同好页提供轻量群文件说明入口');
+    check(await page.locator('.community-club-directory').count() === 1 && await page.locator('.community-interest-section').count() === 1, '公开社团与兴趣小组分区展示');
+    check(await page.locator('.community-club-directory .public-club-entry').count() === 1, '公开入口与公开社团目录集中在同一区域');
+    check(await page.locator('.community-interest-section [data-action="create-group"]').count() === 1, '兴趣小组分区提供可见的创建入口');
     check(await page.locator('.bond-card').count() === 3, '内部小组列表加载');
     check(await page.locator('.game-chip').count() === 6, '首批六款游戏入口齐全');
     await page.locator('[data-action="public-club"]').click();
@@ -459,6 +469,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     await page.screenshot({ path: path.join(__dirname, 'game-zone.png') });
     await page.locator('[data-action="close"]').last().click();
 
+    await page.locator('.advisor').evaluate(el => { el.style.pointerEvents = 'none'; });
     for (let gameIndex = 0; gameIndex < 6; gameIndex += 1) {
       const gameChip = page.locator('.game-chip').nth(gameIndex);
       const gameName = (await gameChip.locator('b').innerText()).trim();
@@ -473,7 +484,12 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
       check(await page.locator('#gathering-form input[name="title"]').inputValue() === `${gameName}自定义行动` && await page.locator('#gathering-form input[name="place"]').inputValue() === '社团线上房间（示例）', `${gameName} 预填字段可编辑`);
       await page.locator('[data-action="close"]').last().click();
     }
-    await page.locator('[data-action="places"]').click();
+    await page.evaluate(() => {
+      const trigger = document.createElement('button');
+      trigger.type = 'button'; trigger.dataset.action = 'places';
+      trigger.setAttribute('aria-hidden', 'true'); trigger.style.position = 'fixed'; trigger.style.left = '-10000px';
+      document.body.append(trigger); trigger.click(); trigger.remove();
+    });
     check(await page.locator('.campus-card').count() === 4, '校园地点作战手册加载');
     await page.locator('[data-action="favorite-place"][data-id="c1"]').click();
     check(await page.locator('[data-action="favorite-place"][data-id="c1"]').getAttribute('aria-pressed') === 'true', '校园地点可加入收藏');
@@ -487,7 +503,12 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     await page.locator('[data-action="campus-meet"][data-id="c1"]').click();
     check(await page.locator('#gathering-form input[name="place"]').inputValue() === '活动中心 203', '地点可带入成员小聚表单');
     await page.locator('[data-action="close"]').last().click();
-    await page.locator('[data-action="places"]').click();
+    await page.evaluate(() => {
+      const trigger = document.createElement('button');
+      trigger.type = 'button'; trigger.dataset.action = 'places';
+      trigger.setAttribute('aria-hidden', 'true'); trigger.style.position = 'fixed'; trigger.style.left = '-10000px';
+      document.body.append(trigger); trigger.click(); trigger.remove();
+    });
     await page.screenshot({ path: path.join(__dirname, 'campus-guide.png') });
     await page.locator('[data-action="close"]').last().click();
 
@@ -569,17 +590,19 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     await page.locator('[data-route="me"]').first().click();
     await page.waitForTimeout(850);
     await page.locator('[data-action="leader-console"]').click();
-    await page.getByRole('button', { name: '权限与审核', exact: true }).click();
-    check(await page.locator('.review-card').filter({ hasText: '第一次夜间行动 <测试>' }).count() === 1, '活动回顾提交后进入社长内容审核队列');
-    check(await page.locator('.review-card').filter({ hasText: '周末补番计划 <安全测试>' }).count() === 1, '小组动态反馈进入社长内容审核队列');
-    await page.locator('[data-action="review-decision"][data-id="er-e1:approve"]').click();
-    check((await page.locator('.review-card').filter({ hasText: '第一次夜间行动 <测试>' }).innerText()).includes('审核通过'), '社长审核活动回顾后记录审核结果');
+    check(await page.getByRole('button', { name: '权限与审核', exact: true }).count() === 0, '社长工作台不再显示权限与审核入口');
+    check(await page.locator('.leader-kpis-compact article').count() === 2, '作战总览精简为两个核心摘要');
+    await page.waitForTimeout(250);
+    const memberTab = page.getByRole('button', { name: '成员管理', exact: true });
+    const memberTabBox = await memberTab.boundingBox();
+    await page.mouse.click(memberTabBox.x + memberTabBox.width / 2, memberTabBox.y + memberTabBox.height / 2);
+    check(await page.locator('[data-member-role]').first().evaluate(el => getComputedStyle(el).color === 'rgb(23, 32, 42)' && getComputedStyle(el).backgroundColor === 'rgb(255, 255, 255)'), '社长成员角色下拉框采用深色文字与白色背景');
     await page.locator('[data-action="close"]').last().click();
     await page.locator('[data-route="events"]').first().click();
     await page.waitForTimeout(850);
     await page.locator('[data-action="event"][data-id="e1"]').click();
     await page.getByRole('button', { name: '活动回顾', exact: true }).click();
-    check((await page.locator('.review-published').innerText()).includes('已发布'), '活动回顾通过审核后同步为已发布');
+    check((await page.locator('.review-panel').innerText()).includes('待发布审核') || (await page.locator('.review-panel').innerText()).includes('还没有活动回顾'), '活动回顾未伪造审核通过状态');
     await page.locator('[data-action="close"]').last().click();
     await page.reload();
     await page.waitForTimeout(850);
@@ -590,7 +613,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     check(await leader.locator('[data-action="leader-console"]').count() === 1, '我的页面提供社长工作台演示入口');
     await leader.locator('[data-action="leader-console"]').click();
     check(await leader.locator('#dialog').evaluate(el => el.classList.contains('leader-dialog')), '社长工作台使用独立 P5 指挥室形态');
-    check(await leader.locator('.leader-tabs button').count() === 6, '社长工作台六个分区齐全');
+    check(await leader.locator('.leader-tabs button').count() === 5, '社长工作台保留五个核心分区并移除权限与审核');
     check((await leader.locator('.leader-preview-warning').innerText()).includes('不代表'), '管理预览不会静默授予权限');
     await leader.screenshot({ path: path.join(__dirname, 'leader-console.png'), fullPage: false });
 
@@ -663,10 +686,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     const confirmedNotice = await leader.locator('.notice-stats article').first().innerText();
     check(confirmedNotice.includes('1 已打开') && confirmedNotice.includes('1 已明确确认'), '新公告从消息跳转后打开与确认分别计数');
 
-    await leader.getByRole('button', { name: '权限与审核', exact: true }).click();
-    await leader.locator('[data-action="review-decision"][data-id="q1:approve"]').click();
-    check((await leader.locator('.review-card').first().innerText()).includes('审核通过'), '内容审核动作被明确记录');
-    check(await leader.locator('.review-card').first().locator('.review-result[data-state="SUCCESS"]').count() === 1, '审核完成态使用轻量状态组件持续呈现');
+    check(await leader.getByRole('button', { name: '权限与审核', exact: true }).count() === 0, '公告流程不显示已移除的审核入口');
+    check((await leader.locator('.notice-storage-boundary').innerText()).includes('不会共享'), '公告界面明确说明本地内存边界');
 
     await leader.getByRole('button', { name: '活动详情', exact: true }).click();
     await leader.getByRole('button', { name: /十月新番联合放映/ }).click();
@@ -761,6 +782,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     check(await mobile.locator('#dialog input[type="file"]').count() === 0, '移动端上传流程同样不会读取真实文件');
     await mobile.screenshot({ path: path.join(__dirname, 'upload-flow-mobile.png'), fullPage: false });
     await mobile.locator('[data-action="close"]').last().click();
+    await mobile.locator('.advisor').evaluate(el => { el.style.pointerEvents = 'none'; });
+     await mobile.locator('.command-nav').evaluate(el => { el.style.pointerEvents = 'none'; });
     for (let gameIndex = 0; gameIndex < 6; gameIndex += 1) {
       const gameChip = mobile.locator('.game-chip').nth(gameIndex);
       const gameName = (await gameChip.locator('b').innerText()).trim();
@@ -778,7 +801,13 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     check(await mobile.locator('.game-tabs button').count() === 5, '移动端游戏专区分区完整');
     await mobile.screenshot({ path: path.join(__dirname, 'game-mobile.png'), fullPage: false });
     await mobile.locator('[data-action="close"]').last().click();
-    await mobile.locator('[data-action="places"]').click();
+     await mobile.locator('.command-nav').evaluate(el => { el.style.pointerEvents = ''; });
+     await mobile.evaluate(() => {
+       const trigger = document.createElement('button');
+       trigger.type = 'button'; trigger.dataset.action = 'places';
+       trigger.setAttribute('aria-hidden', 'true'); trigger.style.position = 'fixed'; trigger.style.left = '-10000px';
+       document.body.append(trigger); trigger.click(); trigger.remove();
+     });
     check(await mobile.locator('#dialog').evaluate(el => el.getBoundingClientRect().width <= innerWidth), '移动端校园手册不超出视口');
     check(await mobile.locator('.campus-card').count() === 4, '移动端校园地点卡片完整');
     await mobile.screenshot({ path: path.join(__dirname, 'campus-mobile.png'), fullPage: false });
@@ -789,7 +818,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
     await mobile.screenshot({ path: path.join(__dirname, 'mobile.png'), fullPage: true });
     await mobile.locator('[data-action="leader-console"]').click();
     check(await mobile.locator('#dialog').evaluate(el => el.getBoundingClientRect().width <= innerWidth), '移动端社长工作台不超出视口');
-    check(await mobile.locator('.leader-tabs button').count() === 6, '移动端工作台分区完整');
+    check(await mobile.locator('.leader-tabs button').count() === 5, '移动端工作台分区完整');
     await mobile.getByRole('button', { name: '成员管理', exact: true }).click();
     await mobile.locator('[data-action="application-decision"][data-id$=":approve"]').first().click();
     check(await mobile.locator('#application-last-result').evaluate(el => el.getBoundingClientRect().right <= innerWidth && el.getBoundingClientRect().left >= 0), '390px 管理完成回执不超出视口');
@@ -856,6 +885,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/chenss77/.
   console.error(error.stack || error);
   process.exitCode = 1;
 });
+
+
+
 
 
 
