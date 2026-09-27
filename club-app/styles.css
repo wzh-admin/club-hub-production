@@ -960,6 +960,62 @@ body.reduced-motion [data-component="dialog"][data-motion],body.reduced-motion [
 @media(max-width:640px){.squad-heading{display:grid}.squad-count{justify-self:start}.squad-row-actions{width:100%;justify-content:stretch}.squad-row-actions .p5-button{flex:1}.squad-detail-grid,.form-grid{grid-template-columns:1fr}}
 
 
+/* 2026-09-27 BA 临时活动小队对比度修正：浅色面板配深色文字，避免社区背景遮罩下不可读。 */
+:root[data-theme="blue-archive"] .squad-panel {
+  background: rgba(244, 252, 255, .96);
+  color: #17324d;
+  border: 1px solid rgba(23, 50, 77, .22);
+  border-top: 4px solid #2b9fe8;
+  box-shadow: 0 12px 28px rgba(23, 50, 77, .2);
+}
+:root[data-theme="blue-archive"] .squad-panel h2,
+:root[data-theme="blue-archive"] .squad-panel p,
+:root[data-theme="blue-archive"] .squad-panel small,
+:root[data-theme="blue-archive"] .squad-panel b,
+:root[data-theme="blue-archive"] .squad-panel span {
+  color: #17324d;
+  opacity: 1;
+}
+:root[data-theme="blue-archive"] .squad-panel .squad-heading > div > small {
+  color: #1779b8;
+  letter-spacing: .08em;
+}
+:root[data-theme="blue-archive"] .squad-panel .squad-heading p,
+:root[data-theme="blue-archive"] .squad-panel .squad-row span,
+:root[data-theme="blue-archive"] .squad-panel .squad-count small {
+  color: #355f7b;
+}
+:root[data-theme="blue-archive"] .squad-panel .squad-count {
+  color: #126da8;
+  border-color: #2b9fe8;
+}
+:root[data-theme="blue-archive"] .squad-panel .squad-row {
+  border-top-color: rgba(23, 50, 77, .2);
+}
+:root[data-theme="blue-archive"] .squad-panel .squad-row.is-joined {
+  background: rgba(84, 220, 254, .16);
+}
+:root[data-theme="blue-archive"] .squad-panel .squad-row button {
+  color: #17324d;
+  background: rgba(255, 255, 255, .82);
+  border-color: #2b9fe8;
+  border-radius: 8px;
+}
+:root[data-theme="blue-archive"] [data-component="dialog"].squad-detail-dialog #dialog-body {
+  color: #17324d;
+}
+:root[data-theme="blue-archive"] [data-component="dialog"].squad-detail-dialog #dialog-body .description,
+:root[data-theme="blue-archive"] [data-component="dialog"].squad-detail-dialog #dialog-body .squad-detail-grid span,
+:root[data-theme="blue-archive"] [data-component="dialog"].squad-detail-dialog #dialog-body .squad-detail-note {
+  color: #17324d;
+}
+:root[data-theme="blue-archive"] [data-component="dialog"].squad-detail-dialog #dialog-body .squad-detail-grid span {
+  background: rgba(255, 255, 255, .74);
+  border-color: rgba(23, 50, 77, .2);
+}
+:root[data-theme="blue-archive"] [data-component="dialog"].squad-detail-dialog #dialog-body .squad-detail-grid b {
+  color: #355f7b;
+}
 /* 2026-09-27 同好目录层级、管理台精简与可读性修正。 */
 .community-club-directory{margin:18px 0 30px;padding:clamp(16px,2.5vw,28px);background:color-mix(in srgb,var(--theme-panel,#fff) 82%,transparent);border-left:7px solid var(--theme-accent);color:var(--theme-ink);}
 .community-interest-section{margin:26px 0 30px;}
@@ -982,3 +1038,4 @@ body.reduced-motion [data-component="dialog"][data-motion],body.reduced-motion [
 @media(max-width:700px){.community-section-heading{align-items:stretch;flex-direction:column}.community-section-heading>.p5-button{width:100%}.leader-kpis-compact,.command-wall-compact{grid-template-columns:1fr}.leader-kpis-compact article{min-height:120px}.community-club-directory{padding:14px}.community-interest-section{margin-block:22px}}
 
 .community-club-directory .public-club-entry{margin:8px 0 18px;background:var(--theme-ink);color:#fff}.community-club-directory .public-club-entry small{color:#ff6670}.community-club-directory .community-section-heading{margin-bottom:8px}
+
